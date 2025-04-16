@@ -58,7 +58,7 @@ llm_science=ChatGroq(groq_api_key=groq_api_key,
 
 prompt=ChatPromptTemplate.from_template(
 """
-Assume you are a Mathematics and Science teacher of very young childern and you need to answer the following question to a child. Explain the concept in a very simple way and provide examples and analogies to make it easy to understand. Answer only as a teacher who is explaining things to students. Take the following texts from NCERT Mathematics and Science textbooks and answer the question as a who teaches from NECERT textbooks. 
+Assume you are a Mathematics and Science teacher of very young childern and you need to answer the following question to a child. Explain the concept in a very simple way and provide examples and analogies to make it easy to understand. Answer only as a teacher who is explaining things to students. Take the following question from NCERT Mathematics and Science textbooks and answer the question as a teacher who teaches from NECERT textbooks. 
 <context>
 {context}
 <context>
@@ -91,7 +91,7 @@ def vector_embedding_math():
 
 
 def vector_embedding_science():
-    if "vectors" not in st.session_state:
+    if "sc_vectors" not in st.session_state:
 
         st.session_state.embeddings=GoogleGenerativeAIEmbeddings(model = "models/text-embedding-004")
         st.session_state.loader=PyPDFDirectoryLoader("./Science") ## Data Ingestion
@@ -106,7 +106,7 @@ def vector_embedding_science():
         ## Chunk Creation
         st.session_state.final_documents=st.session_state.semantic_chunker.create_documents(texts) #splitting
 
-        st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings) #vector Google embeddings
+        st.session_state.sc_vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings) #vector Google embeddings
         print(st.session_state.final_documents[200])
         print("Total Number of Chunks Created: ", len(st.session_state.final_documents))
         print("Total Number of Documents: ", len(st.session_state.docs))
@@ -115,7 +115,7 @@ def vector_embedding_science():
 # Move data loading buttons into the sidebar with design enhancements
 if st.sidebar.button("Load Math Data"):
     vector_embedding_math()
-    st.sidebar.success("Vector Store DB Is Ready")
+    st.sidebar.success("Mathematics DB Is Ready")
 
 if st.sidebar.button("Load Science Data"):
     vector_embedding_science()
@@ -145,7 +145,7 @@ with col2:
     if st.button("Get Answer", key='get_answer_science'):
         # Create the retrieval chain
         document_chain = create_stuff_documents_chain(llm_science, prompt)
-        retriever = st.session_state.vectors.as_retriever()
+        retriever = st.session_state.sc_vectors.as_retriever()
         retrieval_chain = create_retrieval_chain(retriever, document_chain)
         response = retrieval_chain.invoke({'input': prompt2})
         st.write(response['answer'])
