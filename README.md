@@ -1,3 +1,8 @@
+# Added Features:
+1. Memory component added with ConversationBufferMemory
+2. Chat window enabled within Streamlit UI
+3. All mathematical formulations are now rendered using Latex
+
 # NCERT Tutor: Math and Science Q&A
 
 This project is a Streamlit-based application that acts as a tutor for NCERT Mathematics and Science textbooks. It leverages AI models to provide simple, child-friendly explanations to questions from these textbooks.
